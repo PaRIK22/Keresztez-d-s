@@ -1,0 +1,14 @@
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.AssemblyInfoInputs.cache
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.AssemblyInfo.cs
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.csproj.CoreCompileInputs.cache
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\bin\Debug\net8.0\Keresztezodes.exe
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\bin\Debug\net8.0\Keresztezodes.deps.json
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\bin\Debug\net8.0\Keresztezodes.runtimeconfig.json
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\bin\Debug\net8.0\Keresztezodes.dll
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\bin\Debug\net8.0\Keresztezodes.pdb
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.dll
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\refint\Keresztezodes.dll
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.pdb
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\Keresztezodes.genruntimeconfig.cache
+C:\Users\pal.patrik\Kódok,projektek\PLC Gyakorlás\Kereszteződés\Keresztezodes\Keresztezodes\obj\Debug\net8.0\ref\Keresztezodes.dll

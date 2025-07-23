@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Kereszteződés szimuláció</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .lights-row {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .light-group {
+            text-align: center;
+        }
+
+        .traffic-light {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .bulb {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #333;
+            border: 2px solid #222;
+            opacity: 0.2;
+        }
+
+            .bulb.red {
+                background: red;
+            }
+
+            .bulb.yellow {
+                background: yellow;
+            }
+
+            .bulb.green {
+                background: #0f0;
+            }
+
+            .bulb.active {
+                opacity: 1;
+                box-shadow: 0 0 10px 2px #fff4;
+            }
+
+        .status {
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        button {
+            margin: 0 10px;
+            padding: 8px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kereszteződés szimuláció</h1>
+    <!-- Lámpák vizuális elrendezése -->
+    <div class="lights-row">
+        <div class="light-group">
+            <div>Észak-Dél</div>
+            <div class="traffic-light" id="ns">
+                <div class="bulb red"></div>
+                <div class="bulb yellow"></div>
+                <div class="bulb green"></div>
+            </div>
+        </div>
+        <div class="light-group">
+            <div>Észak-Dél Kanyarodó</div>
+            <div class="traffic-light" id="nsL">
+                <div class="bulb red"></div>
+                <div class="bulb yellow"></div>
+                <div class="bulb green"></div>
+            </div>
+        </div>
+        <div class="light-group">
+            <div>Kelet-Nyugat</div>
+            <div class="traffic-light" id="ew">
+                <div class="bulb red"></div>
+                <div class="bulb yellow"></div>
+                <div class="bulb green"></div>
+            </div>
+        </div>
+        <div class="light-group">
+            <div>Kelet-Nyugat Kanyarodó</div>
+            <div class="traffic-light" id="ewL">
+                <div class="bulb red"></div>
+                <div class="bulb yellow"></div>
+                <div class="bulb green"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Állapot kijelző -->
+    <div class="status" id="status">Állapot: Leállítva</div>
+    <!-- Vezérlő gombok -->
+    <button id="enableBtn">Lámpák engedélyezése</button>
+    <button id="startBtn" disabled>Forgalomirányítás indítása</button>
+    <button id="outBtn" disabled>Üzemen kívül</button>
+
+    <script>
+        // Lámpa szekvenciák és időzítések
+        const ns = ["Red", "Red_Yellow", "Green", "Green_end", "Yellow", "Red"];
+        const nsDur = [29000, 1000, 10000, 5000, 2000, 18000];
+        const nsL = ["Red", "Red_Yellow", "Green", "Green_end", "Yellow"];
+        const nsLDur = [47000, 1000, 5000, 3000, 2000];
+        const ew = ["Red_Yellow", "Green", "Green_end", "Yellow", "Red"];
+        const ewDur = [1000, 10000, 5000, 2000, 47000];
+        const ewL = ["Red", "Red_Yellow", "Green", "Green_end", "Yellow", "Red"];
+        const ewLDur = [18000, 1000, 5000, 3000, 2000, 29000];
+
+        let nsIndex = 0, nsLIndex = 0, ewIndex = 0, ewLIndex = 0;
+        let nsRemaining = nsDur[0], nsLRemaining = nsLDur[0], ewRemaining = ewDur[0], ewLRemaining = ewLDur[0];
+        let interval = null;
+        // Állapot: "Disabled", "Enabled", "Running", "OutOfOrder"
+        let state = "Disabled";
+
+        // Lámpák színének beállítása
+        function setLight(group, color) {
+            const bulbs = document.querySelectorAll(`#${group} .bulb`);
+            bulbs.forEach(b => b.classList.remove('active'));
+            if (color === "Red") bulbs[0].classList.add('active');
+            else if (color === "Red_Yellow") { bulbs[0].classList.add('active'); bulbs[1].classList.add('active'); }
+            else if (color === "Green" || color === "Green_end") bulbs[2].classList.add('active');
+            else if (color === "Yellow") bulbs[1].classList.add('active');
+        }
+
+        // Lámpák frissítése
+        function updateLights() {
+            setLight("ns", ns[nsIndex]);
+            setLight("nsL", nsL[nsLIndex]);
+            setLight("ew", ew[ewIndex]);
+            setLight("ewL", ewL[ewLIndex]);
+        }
+
+        // Állapot szöveg frissítése
+        function showStatus(msg) {
+            document.getElementById("status").textContent = msg;
+        }
+
+        // Indexek alaphelyzetbe állítása
+        function resetIndexes() {
+            nsIndex = nsLIndex = ewIndex = ewLIndex = 0;
+            nsRemaining = nsDur[0];
+            nsLRemaining = nsLDur[0];
+            ewRemaining = ewDur[0];
+            ewLRemaining = ewLDur[0];
+        }
+
+        // Forgalomirányítás indítása
+        function runSequence() {
+            if (interval) clearInterval(interval);
+            resetIndexes();
+            updateLights();
+            showStatus("Állapot: Folyamatban");
+            state = "Running";
+            interval = setInterval(() => {
+                nsRemaining -= 100;
+                nsLRemaining -= 100;
+                ewRemaining -= 100;
+                ewLRemaining -= 100;
+                if (nsRemaining <= 0) {
+                    nsIndex = (nsIndex + 1) % ns.length;
+                    nsRemaining = nsDur[nsIndex];
+                }
+                if (nsLRemaining <= 0) {
+                    nsLIndex = (nsLIndex + 1) % nsL.length;
+                    nsLRemaining = nsLDur[nsLIndex];
+                }
+                if (ewRemaining <= 0) {
+                    ewIndex = (ewIndex + 1) % ew.length;
+                    ewRemaining = ewDur[ewIndex];
+                }
+                if (ewLRemaining <= 0) {
+                    ewLIndex = (ewLIndex + 1) % ewL.length;
+                    ewLRemaining = ewLDur[ewLIndex];
+                }
+                updateLights();
+            }, 100);
+        }
+
+        // Üzemen kívüli állapot (sárga villogás)
+        function runOutOfOrder() {
+            if (interval) clearInterval(interval);
+            showStatus("Állapot: Üzemen kívül");
+            state = "OutOfOrder";
+            let on = false;
+            interval = setInterval(() => {
+                ["ns", "nsL", "ew", "ewL"].forEach(id => {
+                    const bulbs = document.querySelectorAll(`#${id} .bulb`);
+                    bulbs.forEach(b => b.classList.remove('active'));
+                    if (on) bulbs[1].classList.add('active');
+                });
+                on = !on;
+            }, 500);
+        }
+
+        // Minden lámpa kikapcsolása
+        function allLightsOff() {
+            ["ns", "nsL", "ew", "ewL"].forEach(id => {
+                const bulbs = document.querySelectorAll(`#${id} .bulb`);
+                bulbs.forEach(b => b.classList.remove('active'));
+            });
+        }
+
+        // Engedélyezés gomb
+        document.getElementById("enableBtn").onclick = function () {
+            if (state === "Disabled") {
+                state = "Enabled";
+                allLightsOff();
+                showStatus("Állapot: Bekapcsolva, válassz üzemmódot!");
+                document.getElementById("startBtn").disabled = false;
+                document.getElementById("outBtn").disabled = false;
+                document.getElementById("enableBtn").disabled = true;
+            }
+        };
+
+        // Start gomb
+        document.getElementById("startBtn").onclick = function () {
+            if (state === "Enabled" || state === "OutOfOrder") {
+                runSequence();
+            }
+        };
+
+        // Out of order gomb
+        document.getElementById("outBtn").onclick = function () {
+            if (state === "Enabled" || state === "Running") {
+                runOutOfOrder();
+            }
+        };
+
+        // Induláskor minden lámpa lekapcsolva, csak az engedélyezés gomb aktív
+        allLightsOff();
+        showStatus("Állapot: Leállítva");
+        document.getElementById("startBtn").disabled = true;
+        document.getElementById("outBtn").disabled = true;
+    </script>
+</body>
+</html>
